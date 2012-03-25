@@ -1,0 +1,27 @@
+
+.fact {
+border-top: #ccc solid 1px;
+}
+
+.fact .added {
+font-style: italic;
+color: #bbb;
+}
+.fact .added a {
+color: #66f;
+}
+
+.day-sep {
+  color: #666;
+}
+
+.pager {
+margin-top: 2em;
+}
+
+.modal-body input {
+width: 95%;
+}
+.modal-body textarea {
+width: 95%;
+}

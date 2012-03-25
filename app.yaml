@@ -4,5 +4,9 @@ runtime: go
 api_version: 3
 
 handlers:
+- url: /media/css
+  static_dir: media/css
+- url: /media/js
+  static_dir: media/js
 - url: /.*
   script: _go_app
