@@ -1,0 +1,28 @@
+<html>
+<head></head>
+<body>
+<form action="/add/" method="post">
+<input type="text" name="title" placeholder="title/cue"/><br />
+<textarea name="details" placeholder="details"></textarea><br />
+<input type="text" name="source_url" placeholder="source URL" /><br />
+<input type="text" name="source_name" placeholder="source name" /><br />
+<input type="submit" value="add" />
+
+
+
+
+</form>
+
+{{range .}}
+<h2>{{html .Title}}</h2>
+<p>{{html .Details}}</p>
+{{with .User}}
+  <p><b>{{html .}}</b></p>
+{{else}}
+  <p><b>Anonymous</b></p>
+{{end}}
+{{end}}
+
+
+</body>
+</html>
