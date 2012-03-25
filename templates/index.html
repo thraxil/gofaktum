@@ -22,28 +22,84 @@
   </head>
 <body class="">
 <div id="container">
-<form action="/add/" method="post">
-<input type="text" name="title" placeholder="title/cue"/><br />
-<textarea name="details" placeholder="details"></textarea><br />
-<input type="text" name="source_url" placeholder="source URL" /><br />
-<input type="text" name="source_name" placeholder="source name" /><br />
-<input type="submit" value="add" />
+<div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="/">Faktum</a>
+
+	  <form action="/search/" method="get" class="navbar-search pull-right">
+	    <input type="text" name="q" class="search-query" value="" placeholder="search" />
+	  </form>
+
+          <div class="nav-collapse">
+            <ul class="nav">
+              <li><a href="/tag/">Tags</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
 
 
+<div class="container">
 
+<div id="add-form" class="modal hide fade">
+  <div class="modal-header">
+    <a class="close" data-dismiss="modal">×</a>
+    <h3>Add Fact</h3>
+  </div>
 
+<form action="/add/" method="post" class="add-fact well">
+<div class="modal-body">
+      <input type="text" name="title" placeholder="title/cue" />
+      <textarea name="details" rows="5" placeholder="details"></textarea>
+      <input type="text" name="source_name" value="" placeholder="source name"/>
+      <input type="text" name="source_url" value="" placeholder="source URL"/>
+      <input type="text" name="tags" placeholder="tags" />
+     (<b>bookmarklet</b>: <a rel="tooltip" title="drag this onto your browser toolbar" href="javascript:window.location='http://faktum.appspot.com/?source_url='+escape(window.location)+';source_name='+escape(document.title)+';details=&gt;%20'+escape((window.getSelection)?window.getSelection():document.getSelection());">add fakt</a>)
+</div>
+
+<div class="modal-footer">
+  <a href="add-form" class="btn" data-dismiss="modal">Close</a>
+  <input type="submit" value="add fact" class="btn btn-primary" />
+</div>
 </form>
+</div>
+
+<p class="lead">Track the facts you learn.
+ <a href="#add-form" class="btn" data-toggle="modal">Add fact</a>
+</p>
 
 {{range .Facts}}
-<h2>{{html .Title}}</h2>
-<p>{{html .Details}}</p>
-{{with .User}}
-  <p><b>{{html .}}</b></p>
-{{else}}
-  <p><b>Anonymous</b></p>
-{{end}}
+
+<div class="fact row" id="fact-">
+  <div class="span6">
+    <h2>{{html .Title}}</h2>
+  </div>
+  <div class="span6 details">
+    {{html .Details}}
+
+    <div class="source">
+      <i class="icon-bookmark"></i>
+      <b>Source</b>: <a href="{{.SourceUrl}}">{{.SourceName}}</a>
+    </div>
+
+    <div class="added">
+      <i class="icon-chevron-right"></i>
+      added <a href="/fact//">{{.AddDate}}</a>
+      by {{html .User}}
+    </div>
+  </div>
+</div>
+
 {{end}}
 
+</div>
 </div>
 
     <script src="/media/js/jquery.js"></script>
