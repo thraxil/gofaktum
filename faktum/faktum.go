@@ -34,6 +34,11 @@ func init() {
 	http.HandleFunc("/add/",add)
 }
 
+type PageData struct {
+	Title string
+	Facts []Fact
+}
+
 // controller functions
 
 var indexTmpl = template.Must(template.New("index").ParseFile("templates/index.html"))
@@ -46,7 +51,12 @@ func index(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.String(), http.StatusInternalServerError)
 		return
 	}
-	if err := indexTmpl.Execute(w, facts); err != nil {
+	p := PageData{
+	Title: "Faktum",
+	Facts: facts,
+	}
+
+	if err := indexTmpl.Execute(w, p); err != nil {
 		http.Error(w, err.String(), http.StatusInternalServerError)
 	}
 }

@@ -1,5 +1,5 @@
 <html>
-<head></head>
+<head><title>{{.Title}}</title></head>
 <body>
 <form action="/add/" method="post">
 <input type="text" name="title" placeholder="title/cue"/><br />
@@ -13,7 +13,7 @@
 
 </form>
 
-{{range .}}
+{{range .Facts}}
 <h2>{{html .Title}}</h2>
 <p>{{html .Details}}</p>
 {{with .User}}
