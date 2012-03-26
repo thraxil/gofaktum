@@ -86,7 +86,7 @@
 
     {{if .SourceName }}<div class="source">
       <i class="icon-bookmark"></i>
-      <b>Source</b>: {{if .SourceUrl }}<a href="{{.SourceUrl}}">{{end}}{{.SourceName}}{{if .SourceUrl }}</a>{{end}}
+      <b>Source</b>: {{if .SourceUrl }}<a href="{{.SourceUrl}}">{{end}}{{html .SourceName}}{{if .SourceUrl }}</a>{{end}}
     </div>{{end}}
 
     <div class="added">
