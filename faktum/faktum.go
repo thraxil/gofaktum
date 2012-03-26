@@ -24,8 +24,8 @@ type Tag struct {
 }
 
 type FactTag struct {
-	Fact string
-	Tag string
+	Fact *datastore.Key
+	Tag *datastore.Key
 }
 
 // routing
