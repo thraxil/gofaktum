@@ -56,10 +56,10 @@
 
 <form action="/add/" method="post" class="add-fact well">
 <div class="modal-body">
-      <input type="text" name="title" placeholder="title/cue" />
-      <textarea name="details" rows="5" placeholder="details"></textarea>
-      <input type="text" name="source_name" value="" placeholder="source name"/>
-      <input type="text" name="source_url" value="" placeholder="source URL"/>
+      <input type="text" name="title" placeholder="title/cue" value="{{.FactTitle}}"/>
+      <textarea name="details" rows="5" placeholder="details">{{.Details}}</textarea>
+      <input type="text" name="source_name" value="{{.SourceName}}" placeholder="source name"/>
+      <input type="text" name="source_url" value="{{.SourceURL}}" placeholder="source URL"/>
       <input type="text" name="tags" placeholder="tags" />
      (<b>bookmarklet</b>: <a rel="tooltip" title="drag this onto your browser toolbar" href="javascript:window.location='http://faktum.appspot.com/?source_url='+escape(window.location)+';source_name='+escape(document.title)+';details=&gt;%20'+escape((window.getSelection)?window.getSelection():document.getSelection());">add fakt</a>)
 </div>
@@ -91,8 +91,8 @@
 
     <div class="added">
       <i class="icon-chevron-right"></i>
-      added <a href="/fact//">{{.AddDate|convertToTime}}</a>
-      by {{html .User}}
+      added {{.AddDate|convertToTime}}
+      by <a href="/user/{{html .User}}/">{{html .User}}</a>
     </div>
   </div>
 </div>

@@ -37,6 +37,10 @@ func init() {
 type PageData struct {
 	Title string
 	Facts []Fact
+	SourceURL string
+	SourceName string
+	Details string
+	FactTitle string
 }
 
 // controller functions
@@ -58,6 +62,10 @@ func index(w http.ResponseWriter, r *http.Request) {
 	p := PageData{
 	Title: "Faktum",
 	Facts: facts,
+	SourceURL: r.FormValue("source_url"),
+	SourceName: r.FormValue("source_name"),
+	Details: r.FormValue("details"),
+	FactTitle: r.FormValue("title"),
 	}
 
 	if err := indexTmpl.Execute(w, p); err != nil {
