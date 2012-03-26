@@ -1,4 +1,4 @@
-package facktum
+package faktum
 
 import (
 	"appengine"
