@@ -31,6 +31,7 @@ type FactTag struct {
 // routing
 func init() {
 	http.HandleFunc("/",index)
+	http.HandleFunc("/login/",login)
 	http.HandleFunc("/add/",add)
 }
 
@@ -41,6 +42,7 @@ type PageData struct {
 	SourceName string
 	Details string
 	FactTitle string
+	User string
 }
 
 // controller functions
@@ -53,6 +55,8 @@ var indexTmpl = template.Must(template.New("index").Funcs(
 
 func index(w http.ResponseWriter, r *http.Request) {
 	c := appengine.NewContext(r)
+	u := user.Current(c)
+
 	q := datastore.NewQuery("Fact").Order("-AddDate").Limit(10)
 	facts := make([]Fact, 0, 10)
 	if _, err := q.GetAll(c, &facts); err != nil {
@@ -66,11 +70,28 @@ func index(w http.ResponseWriter, r *http.Request) {
 	SourceName: r.FormValue("source_name"),
 	Details: r.FormValue("details"),
 	FactTitle: r.FormValue("title"),
+	User: u.String(),
 	}
 
 	if err := indexTmpl.Execute(w, p); err != nil {
 		http.Error(w, err.String(), http.StatusInternalServerError)
 	}
+}
+
+func login(w http.ResponseWriter, r *http.Request) {
+	c := appengine.NewContext(r)
+	u := user.Current(c)
+	if u == nil {
+		url, err := user.LoginURL(c, r.URL.String())
+		if err != nil {
+			http.Error(w, err.String(), http.StatusInternalServerError)
+			return
+		}
+		w.Header().Set("Location", url)
+		w.WriteHeader(http.StatusFound)
+	}
+	w.Header().Set("Location", "/")
+	w.WriteHeader(http.StatusFound)
 }
 
 func add(w http.ResponseWriter, r *http.Request) {

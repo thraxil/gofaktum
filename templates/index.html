@@ -72,7 +72,11 @@
 </div>
 
 <p class="lead">Track the facts you learn.
+{{if .User }}
  <a href="#add-form" class="btn" data-toggle="modal">Add fact</a>
+{{else}}
+<a href="/login/">Please Login to add facts</a>
+{{end}}
 </p>
 
 {{range .Facts}}
