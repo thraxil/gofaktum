@@ -75,15 +75,25 @@ func index(w http.ResponseWriter, r *http.Request) {
 
 func add(w http.ResponseWriter, r *http.Request) {
 	c := appengine.NewContext(r)
+	u := user.Current(c)
+	if u == nil {
+		url, err := user.LoginURL(c, r.URL.String())
+		if err != nil {
+			http.Error(w, err.String(), http.StatusInternalServerError)
+			return
+		}
+		w.Header().Set("Location", url)
+		w.WriteHeader(http.StatusFound)
+		return
+	}
+
 	f := Fact{
         Title: r.FormValue("title"),
 	Details: r.FormValue("details"),
 	SourceUrl: r.FormValue("source_url"),
 	SourceName: r.FormValue("source_name"),
         AddDate:    datastore.SecondsToTime(time.Seconds()),
-	}
-	if u := user.Current(c); u != nil {
-		f.User = u.String()
+	User: u.String(),
 	}
 	_, err := datastore.Put(c, datastore.NewIncompleteKey(c, "Fact", nil), &f)
 	if err != nil {
