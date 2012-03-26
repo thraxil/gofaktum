@@ -41,7 +41,11 @@ type PageData struct {
 
 // controller functions
 
-var indexTmpl = template.Must(template.New("index").ParseFile("templates/index.html"))
+var indexTmpl = template.Must(template.New("index").Funcs(
+	template.FuncMap{"convertToTime": 
+	func(t datastore.Time) *time.Time { 
+                return t.Time() 
+}}).ParseFile("templates/index.html"))
 
 func index(w http.ResponseWriter, r *http.Request) {
 	c := appengine.NewContext(r)
