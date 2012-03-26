@@ -84,10 +84,10 @@
   <div class="span6 details">
     {{html .Details}}
 
-    <div class="source">
+    {{if .SourceName }}<div class="source">
       <i class="icon-bookmark"></i>
-      <b>Source</b>: <a href="{{.SourceUrl}}">{{.SourceName}}</a>
-    </div>
+      <b>Source</b>: {{if .SourceUrl }}<a href="{{.SourceUrl}}">{{end}}{{.SourceName}}{{if .SourceUrl }}</a>{{end}}
+    </div>{{end}}
 
     <div class="added">
       <i class="icon-chevron-right"></i>
