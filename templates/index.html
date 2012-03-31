@@ -95,7 +95,7 @@
 
     <div class="added">
       <i class="icon-chevron-right"></i>
-      added {{.AddDate|convertToTime}}
+      added <a href="/fact{{.Key}}/">{{.AddDate|convertToTime}}</a>
       by <a href="/user/{{html .User}}/">{{html .User}}</a>
     </div>
   </div>
