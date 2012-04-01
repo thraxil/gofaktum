@@ -93,6 +93,14 @@
       <b>Source</b>: {{if .SourceUrl }}<a href="{{.SourceUrl}}">{{end}}{{html .SourceName}}{{if .SourceUrl }}</a>{{end}}
     </div>{{end}}
 
+    {{if .Tags }}
+    <div class="tags"><i class="icon-bookmark-right"></i>
+      {{ range .Tags }}      
+      <a href="/tag/{{html .Name}}/">{{html .Name}}</a>
+      {{ end }}
+    </div>
+    {{ end }}
+
     <div class="added">
       <i class="icon-chevron-right"></i>
       added <a href="/fact{{.Key}}/">{{.AddDate|convertToTime}}</a>

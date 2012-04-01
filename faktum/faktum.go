@@ -39,7 +39,7 @@ func init() {
 
 type PageData struct {
 	Title string
-	Facts []FactWithKey
+	Facts []FactModel
 	SourceURL string
 	SourceName string
 	Details string
@@ -56,6 +56,7 @@ type FactModel struct {
 	SourceName string
 	AddDate    datastore.Time
 	User       string
+	Tags       []Tag
 }
 
 // controller functions
@@ -89,6 +90,7 @@ func index(w http.ResponseWriter, r *http.Request) {
 		SourceName: x.SourceName,
 		Details: x.Details,
 		User: x.User,
+		Tags:getTags(c,key),
 		}
 		facts = append(facts,fk)
 	}
@@ -148,6 +150,27 @@ func addTagToFact(c appengine.Context, factKey *datastore.Key, tag string) {
 		var ft = FactTag{Fact: factKey, Tag: existingTagKey}
 		_, _ = datastore.Put(c, datastore.NewIncompleteKey(c, "FactTag", nil), &ft)
 	} 
+}
+
+func getTags(c appengine.Context, factKey *datastore.Key) (results []Tag) {
+	qft := datastore.NewQuery("FactTag").
+		Filter("Fact = ", factKey).
+		Limit(10)
+	for ft := qft.Run(c); ; {
+		var x FactTag
+		_, err := ft.Next(&x)
+		if err == datastore.Done {
+			break
+		}
+		tagKey := x.Tag
+
+		var t Tag
+		if err = datastore.Get(c, tagKey, &t); err != nil {
+			return
+		}
+		results = append(results,t)
+	}
+	return
 }
 
 func add(w http.ResponseWriter, r *http.Request) {
