@@ -4,8 +4,10 @@ import (
 	"appengine"
 	"appengine/datastore"
 	"appengine/user"
+	"fmt"
 	"http"
 	"template"
+	"strings"
 	"time"
 )
 
@@ -45,7 +47,7 @@ type PageData struct {
 	User string
 }
 
-// model data structures
+// model + key data structures
 type FactWithKey struct {
 	Key        string
 	Title      string
@@ -121,6 +123,33 @@ func login(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusFound)
 }
 
+func addTagToFact(c appengine.Context, factKey *datastore.Key, tag string) {
+	q := datastore.NewQuery("Tag").Filter("Name =", tag)
+	cnt,_ := q.Count(c)
+	var existingTag Tag
+	var existingTagKey *datastore.Key
+	if cnt > 0 {
+		// retrieve
+		for t := q.Run(c); ; {
+			existingTagKey, _ = t.Next(&existingTag)
+			break // only need one
+		}
+	} else {
+		// create a new one
+		var t = Tag{Name: tag}
+		existingTagKey, _ = datastore.Put(c, datastore.NewIncompleteKey(c, "Tag", nil), &t)
+	}
+	qft := datastore.NewQuery("FactTag").
+		Filter("Fact = ", factKey).
+		Filter("Tag = ", existingTagKey)
+	cnt2,_ := qft.Count(c)
+	if cnt2 == 0 {
+		// create a new one
+		var ft = FactTag{Fact: factKey, Tag: existingTagKey}
+		_, _ = datastore.Put(c, datastore.NewIncompleteKey(c, "FactTag", nil), &ft)
+	} 
+}
+
 func add(w http.ResponseWriter, r *http.Request) {
 	c := appengine.NewContext(r)
 	u := user.Current(c)
@@ -143,10 +172,19 @@ func add(w http.ResponseWriter, r *http.Request) {
         AddDate:    datastore.SecondsToTime(time.Seconds()),
 	User:       u.String(),
 	}
-	_, err := datastore.Put(c, datastore.NewIncompleteKey(c, "Fact", nil), &f)
+	key, err := datastore.Put(c, datastore.NewIncompleteKey(c, "Fact", nil), &f)
 	if err != nil {
 		http.Error(w, err.String(), http.StatusInternalServerError)
 		return
 	}
+	
+	tags := strings.Split(r.FormValue("tags"),",")
+	for _,t := range(tags) {
+		t = strings.Trim(t," ")
+		fmt.Printf("<%q>\n", t)
+		addTagToFact(c,key,t)
+	}
+	
+
 	http.Redirect(w, r, "/", http.StatusFound)
 }
