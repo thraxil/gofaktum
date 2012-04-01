@@ -48,7 +48,7 @@ type PageData struct {
 }
 
 // model + key data structures
-type FactWithKey struct {
+type FactModel struct {
 	Key        string
 	Title      string
 	Details    string
@@ -71,7 +71,7 @@ func index(w http.ResponseWriter, r *http.Request) {
 	u := user.Current(c)
 
 	q := datastore.NewQuery("Fact").Order("-AddDate").Limit(10)
-	facts := make([]FactWithKey, 0, 10)
+	facts := make([]FactModel, 0, 10)
 	for t := q.Run(c); ; {
 		var x Fact
 		key, err := t.Next(&x)
@@ -82,7 +82,7 @@ func index(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, err.String(), http.StatusInternalServerError)
 			return
 		}
-		fk := FactWithKey{
+		fk := FactModel{
 		Key: key.String(),
 		Title: x.Title,
 		SourceUrl: x.SourceUrl,
