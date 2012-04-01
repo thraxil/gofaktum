@@ -188,11 +188,11 @@ func add(w http.ResponseWriter, r *http.Request) {
 	}
 
 	f := Fact{
-        Title:      r.FormValue("title"),
+	Title:      r.FormValue("title"),
 	Details:    r.FormValue("details"),
 	SourceUrl:  r.FormValue("source_url"),
 	SourceName: r.FormValue("source_name"),
-        AddDate:    datastore.SecondsToTime(time.Seconds()),
+	AddDate:    datastore.SecondsToTime(time.Seconds()),
 	User:       u.String(),
 	}
 	key, err := datastore.Put(c, datastore.NewIncompleteKey(c, "Fact", nil), &f)
@@ -208,6 +208,5 @@ func add(w http.ResponseWriter, r *http.Request) {
 		addTagToFact(c,key,t)
 	}
 	
-
 	http.Redirect(w, r, "/", http.StatusFound)
 }
