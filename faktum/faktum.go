@@ -204,7 +204,7 @@ func add(w http.ResponseWriter, r *http.Request) {
 	
 	tags := strings.Split(r.FormValue("tags"),",")
 	for _,t := range(tags) {
-		t = strings.Trim(t," ")
+		t = strings.TrimSpace(t)
 		t = strings.ToLower(t)
 		fmt.Printf("<%q>\n", t)
 		addTagToFact(c,key,t)
