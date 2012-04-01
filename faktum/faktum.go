@@ -154,8 +154,7 @@ func addTagToFact(c appengine.Context, factKey *datastore.Key, tag string) {
 
 func getTags(c appengine.Context, factKey *datastore.Key) (results []Tag) {
 	qft := datastore.NewQuery("FactTag").
-		Filter("Fact = ", factKey).
-		Limit(10)
+		Filter("Fact = ", factKey)
 	for ft := qft.Run(c); ; {
 		var x FactTag
 		_, err := ft.Next(&x)
