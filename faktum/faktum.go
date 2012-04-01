@@ -83,6 +83,8 @@ func index(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, err.String(), http.StatusInternalServerError)
 			return
 		}
+		tags := getTags(c,key)
+
 		fk := FactModel{
 		Key: key.String(),
 		Title: x.Title,
@@ -90,7 +92,7 @@ func index(w http.ResponseWriter, r *http.Request) {
 		SourceName: x.SourceName,
 		Details: x.Details,
 		User: x.User,
-		Tags:getTags(c,key),
+		Tags: tags,
 		}
 		facts = append(facts,fk)
 	}
@@ -203,6 +205,7 @@ func add(w http.ResponseWriter, r *http.Request) {
 	tags := strings.Split(r.FormValue("tags"),",")
 	for _,t := range(tags) {
 		t = strings.Trim(t," ")
+		t = strings.ToLower(t)
 		fmt.Printf("<%q>\n", t)
 		addTagToFact(c,key,t)
 	}
