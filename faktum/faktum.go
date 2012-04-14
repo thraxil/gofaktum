@@ -70,7 +70,16 @@ var indexTmpl = template.Must(template.New("index").Funcs(
 func index(w http.ResponseWriter, r *http.Request) {
 	c := appengine.NewContext(r)
 	u := user.Current(c)
-
+	if u == nil {
+		url, err := user.LoginURL(c, r.URL.String())
+		if err != nil {
+			http.Error(w, err.String(), http.StatusInternalServerError)
+			return
+		}
+		w.Header().Set("Location", url)
+		w.WriteHeader(http.StatusFound)
+		return
+	} 
 	q := datastore.NewQuery("Fact").Order("-AddDate").Limit(10)
 	facts := make([]FactModel, 0, 10)
 	for t := q.Run(c); ; {
